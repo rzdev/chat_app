@@ -1,4 +1,6 @@
-const InputText: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
+import { IInputText } from "./InputText.types";
+
+const InputText: React.FC<IInputText> = ({
   className,
   ...props
 }) => {

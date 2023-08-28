@@ -1,4 +1,6 @@
-const Button: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({
+import { IButton } from "./Button.types";
+
+const Button: React.FC<IButton> = ({
   className,
   children,
 }) => {

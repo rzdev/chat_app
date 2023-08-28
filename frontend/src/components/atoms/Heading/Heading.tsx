@@ -1,4 +1,6 @@
-const Heading: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, children }) => {
+import { IHeading } from "./Heading.types";
+
+const Heading: React.FC<IHeading> = ({ className, children }) => {
   return <h1 className={`text-3xl font-semibold ${ className ? className : '' }`}>{children}</h1>;
 };
 

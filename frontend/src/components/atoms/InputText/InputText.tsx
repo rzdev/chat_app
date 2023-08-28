@@ -1,0 +1,15 @@
+const InputText: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
+  className,
+  ...props
+}) => {
+  return (
+    <input
+      {...props}
+      className={`bg-chatapp-gray1 border border-chatapp-gray2 outline-none w-full placeholder:font-medium placeholder:text-base placeholder:text-chatapp-gray3 p-4 rounded-lg ${
+        className ? className : ""
+      }`}
+    />
+  );
+};
+
+export default InputText;

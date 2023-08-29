@@ -25,7 +25,7 @@ const ChatInput: React.FC<IChatInput> = () => {
     <form
       ref={formRef}
       onSubmit={handleOnSubmit}
-      className="bg-chatapp-gray1 border border-chatapp-gray2 w-full p-4 rounded-4xl flex justify-between items-center"
+      className="bg-chatapp-gray1 border border-chatapp-gray2 w-full pl-4 pr-2 py-2 rounded-4xl flex justify-between items-center"
     >
       <textarea
         ref={textAreaRef}

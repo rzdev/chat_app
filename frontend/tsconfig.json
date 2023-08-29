@@ -23,8 +23,12 @@
     /* Path Alias */
     "types": ["node"],
     "paths": {
+      "@api/*": ["./src/api/*"],
       "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"]
+      "@containers/*": ["./src/containers/*"],
+      "@context/*": ["./src/context/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/utils/*"],
     }
   },
   "include": ["src"],

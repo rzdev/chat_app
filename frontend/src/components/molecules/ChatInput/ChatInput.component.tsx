@@ -2,10 +2,10 @@ import { useRef, useState } from "react";
 import { IChatInput } from "./ChatInput.types";
 import useAutosizeTextArea from "@hooks/useAutoSizeTextarea";
 
-const ChatInput: React.FC<IChatInput> = () => {
+const ChatInput: React.FC<IChatInput> = ({ onSubmit }) => {
   const [value, setValue] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   //set textarea height to resize based on value
   useAutosizeTextArea(textAreaRef.current, value);
@@ -13,12 +13,15 @@ const ChatInput: React.FC<IChatInput> = () => {
   //on textarea keydown, if enter key is pressed (without pressing shift key), trigger form submit
   const handleOnKeydown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (formRef.current && e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       formRef.current.requestSubmit();
     }
   };
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    onSubmit(value);
+    setValue("");
   };
 
   return (
@@ -28,6 +31,7 @@ const ChatInput: React.FC<IChatInput> = () => {
       className="bg-chatapp-gray1 border border-chatapp-gray2 w-full pl-4 pr-2 py-2 rounded-4xl flex justify-between items-center"
     >
       <textarea
+        value={value}
         ref={textAreaRef}
         rows={1}
         placeholder="Message here..."

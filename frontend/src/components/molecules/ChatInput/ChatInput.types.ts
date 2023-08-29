@@ -1,1 +1,3 @@
-export interface IChatInput {}
+export interface IChatInput {
+  onSubmit: (message: string) => void;
+}

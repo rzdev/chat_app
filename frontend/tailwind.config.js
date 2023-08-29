@@ -3,7 +3,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
-      'sans': ['inter', 'ui-sans-serif', 'system-ui'],
+      sans: ["inter", "ui-sans-serif", "system-ui"],
     },
     extend: {
       colors: {
@@ -12,6 +12,9 @@ export default {
         "chatapp-gray2": "#E8E8E8",
         "chatapp-gray3": "#BDBDBD",
         "figma-gray": "#E5E5E5",
+      },
+      borderRadius: {
+        "4xl": "3rem",
       },
     },
   },

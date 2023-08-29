@@ -1,1 +1,1 @@
-export interface IButton extends React.HTMLAttributes<HTMLButtonElement> {}
+export interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {}

@@ -23,7 +23,8 @@
     /* Path Alias */
     "types": ["node"],
     "paths": {
-      "@components/*": ["./src/components/*"]
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"]
     }
   },
   "include": ["src"],

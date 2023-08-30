@@ -8,14 +8,22 @@ const App = () => {
   const { loggedIn } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
-  //try to authenticate using data from jwt token (if token exists)
+  //on load, try to authenticate using data from jwt token (if token exists)
   useEffect(() => {
-    getAuthData((data) => {
-      dispatch({
-        type: "SET_LOGGED_IN",
-        payload: { username: data.username, roomId: data.roomId },
+    getAuthData()
+      .then((data) => {
+        if (data?.username && data.roomId) {
+          dispatch({
+            type: "SET_LOGGED_IN",
+            payload: { username: data.username, roomId: data.roomId },
+          });
+        } else {
+          console.error(data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    });
   }, [dispatch]);
 
   return (

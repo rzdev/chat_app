@@ -3,6 +3,7 @@ import { DispatchContext, StateContext } from "@context/index";
 import ChatPage from "@components/pages/ChatPage/ChatPage.component";
 import { IMessage } from "../../types";
 import { socket } from "./../../socket";
+import getMessages from "@api/getMessages";
 
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -10,9 +11,8 @@ const Chat: React.FC = () => {
   const { username, roomId } = useContext(StateContext);
 
   const handleOnExit = () => {
-    if (window.localStorage) {
-      window.localStorage.removeItem("jwt_token");
-    }
+    localStorage.removeItem("jwt_token");
+    socket.disconnect();
     dispatch({ type: "SET_LOGGED_OUT" });
   };
 
@@ -53,9 +53,20 @@ const Chat: React.FC = () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("incoming_message", onIncomingMessageEvent);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [roomId, username]);
+
+  //onload, load messages for current roomId from api
+  useEffect(() => {
+    getMessages()
+      .then((data) => {
+        setMessages(data.data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   if (!username || !roomId) {
     return null;

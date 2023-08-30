@@ -1,18 +1,8 @@
 import { API_BASE_URL } from "@utils/constants";
 
-const login = async (
-  username: string,
-  roomId: string,
-  callback: ({
-    jwt_token,
-    error,
-  }: {
-    jwt_token?: string;
-    error?: string;
-  }) => void
-) => {
+const login = async (username: string, roomId: string) => {
   if (!username || !roomId) {
-    return;
+    return false;
   }
 
   const apiEndpoint = `${API_BASE_URL}login`;
@@ -25,14 +15,10 @@ const login = async (
     body: JSON.stringify({ username, roomId }),
   };
 
-  try {
-    const response = await fetch(apiEndpoint, options);
-    const data = await response.json();
+  const response = await fetch(apiEndpoint, options);
+  const data: { jwt_token?: string; error?: string } = await response.json();
 
-    callback(data);
-  } catch (error) {
-    console.error("login_error", error);
-  }
+  return data;
 };
 
 export default login;

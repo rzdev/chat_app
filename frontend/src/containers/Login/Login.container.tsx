@@ -60,20 +60,22 @@ const Login: React.FC = () => {
      * request access token to backend api
      * and log in current user
      */
-    login(username, roomId, (data) => {
-      if (data.jwt_token) {
+    try {
+      const data = await login(username, roomId);
+      
+      if (data?.jwt_token) {
         //store jwt token in localstorage, so that if the user do a browser refresh, it will still keep the session
-        if (window.localStorage) {
-          window.localStorage.setItem(JWT_TOKEN_STORAGE_KEY, data.jwt_token);
-        }
+        localStorage.setItem(JWT_TOKEN_STORAGE_KEY, data.jwt_token);
         dispatch({ type: "SET_LOGGED_IN", payload: { username, roomId } });
-      } else if (data.error) {
+      } else if (data?.error) {
         dispatch({
           type: "SET_USERNAME_ERROR",
           payload: { error: data.error },
         });
       }
-    });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //if server returns an error when trying to login, show error

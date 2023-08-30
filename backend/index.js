@@ -28,6 +28,32 @@ app.get("/", (req, res) => {
   res.send("<h1>Chat App Backend</h1>");
 });
 
+app.get("/messages", async (req, res) => {
+  const authHeader = req.get("Authorization");
+  if (authHeader) {
+    const tokenArr = authHeader.split(" ");
+    if (!tokenArr.length > 1) {
+      res.status(401).json({ error: "invalid_token" });
+      return;
+    }
+
+    const data = jwt.decode(tokenArr[1], jwtSecret);
+    if (data) {
+      try {
+        const result = await Message.find({ roomId: data.roomId }).sort({ createdAt: 1 });
+        res.status(200).json({ data: result });
+      } catch (error) {
+        console.error("Error:", error);
+        res.status(401).json({ error: "invalid_request" });
+      }
+    } else {
+      res.status(401).json({ error: "invalid_token" });
+    }
+  } else {
+    res.status(401).json({ error: "invalid_request" });
+  }
+});
+
 /*
  * Login & Auth Routes
  */
@@ -40,7 +66,7 @@ app.post("/login", async (req, res) => {
      * if false (username is available), authenticate user
      */
 
-    if(onlineUsernames[req.body.username]) {
+    if (onlineUsernames[req.body.username]) {
       res.status(401).json({ error: "username_exists" });
       return;
     }
@@ -95,11 +121,11 @@ io.on("connection", (socket) => {
   socket.on("join_room", ({ username, roomId }) => {
     //add username to online username list
     onlineUsernames[username] = socket.id;
-    
+
     //join room
     socket.join(roomId);
 
-    console.log(`user ${username} connected and joined ${roomId}`)
+    console.log(`user ${username} connected and joined ${roomId}`);
   });
 
   socket.on("send_message", async ({ username, message, roomId }) => {
@@ -127,7 +153,7 @@ io.on("connection", (socket) => {
     );
     if (disconnectedUsername) {
       delete onlineUsernames[disconnectedUsername];
-      console.log(`user ${disconnectedUsername} disconnected`)
+      console.log(`user ${disconnectedUsername} disconnected`);
     }
   });
 });

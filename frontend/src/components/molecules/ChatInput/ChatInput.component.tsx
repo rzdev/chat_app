@@ -31,6 +31,7 @@ const ChatInput: React.FC<IChatInput> = ({ onSubmit }) => {
       className="bg-chatapp-gray1 border border-chatapp-gray2 w-full pl-4 pr-2 py-2 rounded-4xl flex justify-between items-center"
     >
       <textarea
+        autoFocus={true}
         value={value}
         ref={textAreaRef}
         rows={1}

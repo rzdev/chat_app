@@ -59,15 +59,18 @@ const Chat: React.FC = () => {
 
   //onload, load messages for current roomId from api
   useEffect(() => {
-    getMessages()
-      .then((data) => {
+    const loadMessages = async () => {
+      try {
+        const data = await getMessages();
         if (data && data.data) {
           setMessages(data.data);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadMessages();
   }, []);
 
   if (!username || !roomId) {

@@ -1,13 +1,13 @@
 import { API_BASE_URL, JWT_TOKEN_STORAGE_KEY } from "@utils/constants";
 
 const getAuthData = async () => {
-  if (localStorage.getItem(JWT_TOKEN_STORAGE_KEY) === null) {
+  const jwtToken = localStorage.getItem(JWT_TOKEN_STORAGE_KEY);
+
+  if (!jwtToken) {
     return false;
   }
 
-  const jwtToken = localStorage.getItem(JWT_TOKEN_STORAGE_KEY);
   const apiEndpoint = `${API_BASE_URL}auth`;
-
   const options = {
     method: "POST",
     headers: {

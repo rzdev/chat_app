@@ -4,6 +4,7 @@ export interface ILoginPage {
   roomIdInputRef?: React.RefObject<HTMLInputElement>;
   username: string;
   roomId: string;
+  errorMessage?: string | null;
   onUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRoomIdChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;

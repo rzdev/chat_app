@@ -21,24 +21,30 @@ const Chat: React.FC = () => {
   };
 
   useEffect(() => {
-    function onConnect() {
-      console.log("socket.io - connected");
-
+    const onConnect = () => {
       //once connected, join room
-      socket.emit("join_room", { roomId });
-    }
+      socket.emit("join_room", { username, roomId });
+    };
 
-    function onDisconnect() {
+    const onDisconnect = () => {
       console.log("socket.io - disconnected");
-    }
+    };
 
-    function onIncomingMessageEvent(newMessage: IMessage) {
+    const onIncomingMessageEvent = (newMessage: IMessage) => {
       setMessages((messages) => [...messages, newMessage]);
-    }
+    };
+
+    const handleBeforeUnload = () => {
+      socket.disconnect();
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("incoming_message", onIncomingMessageEvent);
+    };
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("incoming_message", onIncomingMessageEvent);
+    window.addEventListener("beforeunload", handleBeforeUnload); // on window or tab close, disconnect from socket.io
 
     socket.connect();
 
@@ -47,10 +53,11 @@ const Chat: React.FC = () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("incoming_message", onIncomingMessageEvent);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [roomId]);
+  }, [roomId, username]);
 
-  if(!username || !roomId) {
+  if (!username || !roomId) {
     return null;
   }
 

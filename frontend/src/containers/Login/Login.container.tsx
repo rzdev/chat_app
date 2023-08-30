@@ -1,15 +1,17 @@
-import { useContext, useRef, useState } from "react";
-import { DispatchContext } from "@context/index";
+import { useContext, useEffect, useRef, useState } from "react";
+import { DispatchContext, StateContext } from "@context/index";
 import LoginPage from "@components/pages/LoginPage/LoginPage.component";
 import login from "@api/login";
+import { JWT_TOKEN_STORAGE_KEY } from "@utils/constants";
 
 const Login: React.FC = () => {
-  const formRef = useRef<HTMLFormElement | null>(null);
   const usernameInputRef = useRef<HTMLInputElement | null>(null);
   const roomIdInputRef = useRef<HTMLInputElement | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
   const dispatch = useContext(DispatchContext);
+  const { usernameError } = useContext(StateContext);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (usernameInputRef.current) {
@@ -32,19 +34,25 @@ const Login: React.FC = () => {
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    //reset username error
+    dispatch({
+      type: "SET_USERNAME_ERROR",
+      payload: { error: null },
+    });
+
     //validate username to disallow spaces
-    if (formRef.current && usernameInputRef.current && username.includes(" ")) {
+    if (usernameInputRef.current && username.includes(" ")) {
       usernameInputRef.current.setCustomValidity(
-        "Username cannot contain spaces"
+        "Username cannot contain spaces."
       );
-      formRef.current.reportValidity();
+      usernameInputRef.current.reportValidity();
       return;
     }
 
     //validate roomId to disallow spaces
-    if (formRef.current && roomIdInputRef.current && roomId.includes(" ")) {
-      roomIdInputRef.current.setCustomValidity("RoomID cannot contain spaces");
-      formRef.current.reportValidity();
+    if (roomIdInputRef.current && roomId.includes(" ")) {
+      roomIdInputRef.current.setCustomValidity("RoomID cannot contain spaces.");
+      roomIdInputRef.current.reportValidity();
       return;
     }
 
@@ -52,18 +60,44 @@ const Login: React.FC = () => {
      * request access token to backend api
      * and log in current user
      */
-    login(username, roomId, () => {
-      dispatch({ type: "SET_LOGGED_IN", payload: { username, roomId } });
+    login(username, roomId, (data) => {
+      if (data.jwt_token) {
+        //store jwt token in localstorage, so that if the user do a browser refresh, it will still keep the session
+        if (window.localStorage) {
+          window.localStorage.setItem(JWT_TOKEN_STORAGE_KEY, data.jwt_token);
+        }
+        dispatch({ type: "SET_LOGGED_IN", payload: { username, roomId } });
+      } else if (data.error) {
+        dispatch({
+          type: "SET_USERNAME_ERROR",
+          payload: { error: data.error },
+        });
+      }
     });
   };
 
+  //if server returns an error when trying to login, show error
+  useEffect(() => {
+    if (usernameError) {
+      let message = "Something went wrong, please try again..";
+
+      if (usernameError === "username_exists") {
+        message = "Sorry, Username is already taken.";
+      }
+
+      setErrorMessage(message);
+    } else {
+      setErrorMessage(null);
+    }
+  }, [usernameError]);
+
   return (
     <LoginPage
-      ref={formRef}
       usernameInputRef={usernameInputRef}
       roomIdInputRef={roomIdInputRef}
       username={username}
       roomId={roomId}
+      errorMessage={errorMessage}
       onUsernameChange={handleUsernameChange}
       onRoomIdChange={handleRoomIdChange}
       onSubmit={handleLoginSubmit}

@@ -1,9 +1,15 @@
-import { API_BASE_URL, JWT_TOKEN_STORAGE_KEY } from "@utils/constants";
+import { API_BASE_URL } from "@utils/constants";
 
 const login = async (
   username: string,
   roomId: string,
-  callback: () => void
+  callback: ({
+    jwt_token,
+    error,
+  }: {
+    jwt_token?: string;
+    error?: string;
+  }) => void
 ) => {
   if (!username || !roomId) {
     return;
@@ -23,15 +29,7 @@ const login = async (
     const response = await fetch(apiEndpoint, options);
     const data = await response.json();
 
-    if (data.jwt_token) {
-      //store jwt token in localstorage, so that if the user do a browser refresh, it will still keep the session
-      if (window.localStorage) {
-        window.localStorage.setItem(JWT_TOKEN_STORAGE_KEY, data.jwt_token);
-      }
-      callback();
-    } else {
-      console.error("login_error", data);
-    }
+    callback(data);
   } catch (error) {
     console.error("login_error", error);
   }

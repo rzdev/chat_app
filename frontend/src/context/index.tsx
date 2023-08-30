@@ -2,6 +2,7 @@ import { createContext, useReducer } from "react";
 import { IAppState, TAction } from "./types";
 
 const initialState: IAppState = {
+  usernameError: null,
   loggedIn: false,
   username: null,
   roomId: null,
@@ -9,12 +10,18 @@ const initialState: IAppState = {
 
 const reducer = (state: IAppState, action: TAction): IAppState => {
   switch (action.type) {
+    case "SET_USERNAME_ERROR":
+      return {
+        ...state,
+        usernameError: action.payload.error,
+      };
     case "SET_LOGGED_IN":
       return {
         ...state,
         loggedIn: true,
         username: action.payload.username,
         roomId: action.payload.roomId,
+        usernameError: null,
       };
     case "SET_LOGGED_OUT":
       return initialState;

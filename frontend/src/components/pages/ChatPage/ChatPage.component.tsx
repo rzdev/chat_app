@@ -30,7 +30,7 @@ const ChatPage: React.FC<IChatPage> = ({
         middleComponent={<Heading className="truncate ...">{roomId}</Heading>}
       />
       <>
-        <div ref={chatSrollerDivRef} className="h-[430px] overflow-scroll mb-4">
+        <div ref={chatSrollerDivRef} className="h-[430px] overflow-x-scroll mb-4">
           {messages.map((item, index) => (
             <ChatBubble
               key={index}

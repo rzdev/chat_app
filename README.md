@@ -7,7 +7,7 @@
 **Note:** Please make sure to have Docker installed on your machine.
 
 - On the root directory of this project, run `docker compose up`.
-  For the initial process it might take longer around 15s-30s to download and to build all the required packages.
+  For the initial process it might take longer around 1 minute to 3 minutes to download and to build all the required packages.
 - Once all the required Docker Images has been downloaded & built, it will start MongoDB, the Back-End service & the Front-End Application.
 - On your browser, navigate to http://localhost:5173/ to open the Live Chat Web App.
   

@@ -10,9 +10,10 @@ const App = () => {
 
   //on load, try to authenticate using data from jwt token (if token exists)
   useEffect(() => {
-    getAuthData()
-      .then((data) => {
-        if (data?.username && data.roomId) {
+    const doAuth = async () => {
+      try {
+        const data = await getAuthData();
+        if (data?.username && data?.roomId) {
           dispatch({
             type: "SET_LOGGED_IN",
             payload: { username: data.username, roomId: data.roomId },
@@ -20,10 +21,12 @@ const App = () => {
         } else {
           console.error(data);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+
+    doAuth();
   }, [dispatch]);
 
   return (

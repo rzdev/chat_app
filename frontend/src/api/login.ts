@@ -2,7 +2,7 @@ import { API_BASE_URL } from "@utils/constants";
 
 const login = async (username: string, roomId: string) => {
   if (!username || !roomId) {
-    return false;
+    return;
   }
 
   const apiEndpoint = `${API_BASE_URL}login`;

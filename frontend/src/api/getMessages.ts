@@ -4,7 +4,7 @@ const getMessages = async () => {
   const jwtToken = localStorage.getItem(JWT_TOKEN_STORAGE_KEY);
 
   if (!jwtToken) {
-    return false;
+    return;
   }
 
   const apiEndpoint = `${API_BASE_URL}messages`;

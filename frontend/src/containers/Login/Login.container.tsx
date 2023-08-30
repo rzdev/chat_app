@@ -40,10 +40,21 @@ const Login: React.FC = () => {
       payload: { error: null },
     });
 
+    const specialCharPattern = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+
     //validate username to disallow spaces
     if (usernameInputRef.current && username.includes(" ")) {
       usernameInputRef.current.setCustomValidity(
         "Username cannot contain spaces."
+      );
+      usernameInputRef.current.reportValidity();
+      return;
+    }
+
+    //validate username to disallow special char
+    if (usernameInputRef.current && specialCharPattern.test(username)) {
+      usernameInputRef.current.setCustomValidity(
+        "Username cannot contain special characters."
       );
       usernameInputRef.current.reportValidity();
       return;
@@ -56,13 +67,22 @@ const Login: React.FC = () => {
       return;
     }
 
+    //validate roomId to disallow special char
+    if (roomIdInputRef.current && specialCharPattern.test(username)) {
+      roomIdInputRef.current.setCustomValidity(
+        "RoomID cannot contain special characters."
+      );
+      roomIdInputRef.current.reportValidity();
+      return;
+    }
+
     /*
      * request access token to backend api
      * and log in current user
      */
     try {
       const data = await login(username, roomId);
-      
+
       if (data?.jwt_token) {
         //store jwt token in localstorage, so that if the user do a browser refresh, it will still keep the session
         localStorage.setItem(JWT_TOKEN_STORAGE_KEY, data.jwt_token);

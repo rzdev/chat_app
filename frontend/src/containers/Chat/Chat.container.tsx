@@ -61,7 +61,9 @@ const Chat: React.FC = () => {
   useEffect(() => {
     getMessages()
       .then((data) => {
-        setMessages(data.data)
+        if (data && data.data) {
+          setMessages(data.data);
+        }
       })
       .catch((error) => {
         console.log(error);

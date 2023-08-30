@@ -1,7 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import { DispatchContext } from "@context/index";
 import LoginPage from "@components/pages/LoginPage/LoginPage.component";
-import { API_BASE_URL } from "@utils/constants";
 import login from "@api/login";
 
 const Login: React.FC = () => {

@@ -18,8 +18,6 @@ const App = () => {
             type: "SET_LOGGED_IN",
             payload: { username: data.username, roomId: data.roomId },
           });
-        } else {
-          console.error(data);
         }
       } catch (error) {
         console.error(error);

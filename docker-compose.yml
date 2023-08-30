@@ -9,4 +9,17 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example # for demo purpose only
       MONGO_INITDB_DATABASE: chat
-      
+  backend:
+    depends_on: 
+      - mongodb
+    build: ./backend/
+    ports:
+      - "3000:3000"
+    command: ["npm", "start"]
+  frontend:
+    depends_on: 
+      - backend
+    build: ./frontend/
+    ports:
+      - "5173:5173"
+    command: ["npm", "run", "dev"]
